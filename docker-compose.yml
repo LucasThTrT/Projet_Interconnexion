@@ -16,7 +16,7 @@ services:
     container_name: routeur_FAI
     build:
       context: .backbone/routeur_FAI
-      dockfile: Dockerfile
+      dockerfile: Dockerfile
     restart: always
     hostname: routeur_FAI
     dns:
@@ -25,7 +25,7 @@ services:
     networks:
       backbone:
         ipv4_address: 120.0.0.1
-    priviledged: true
+    privileged: true
 
   ## Server DNS Fournisseur Accès Internet
     # Table correspondance de tous les AS
@@ -42,7 +42,7 @@ services:
     networks:
       backbone:
         ipv4_address: 120.0.0.2 
-    priviledged: true
+    privileged: true
     depends_on:
       - routeur_FAI
     
@@ -66,7 +66,7 @@ services:
         ipv4_adress:120.0.64.111
       backbone: #adress -> backbone
         ipv4_address:120.0.0.111
-      priviledged: true # donne des accès élevé au système
+      privileged: true # donne des accès élevé au système
       depends_on:
         # depend de sa connection avec l'extèrieur
         # si FAI DOWN -> ne s'active pas
@@ -87,7 +87,7 @@ services:
       networks:
         pro:
           ipv4_adress: 120.0.64.1
-      priviledged: true
+      privileged: true
       depends_on:
         - routeur_pro
         # - box_pro1 ??
@@ -108,7 +108,7 @@ services:
       networks:
         pro:
           ipv4_adress: 120.0.64.2
-      priviledged: true
+      privileged: true
       depends_on:
         - DNS_pro
       
@@ -127,7 +127,7 @@ services:
       networks:
         pro:
           ipv4_adress: 120.0.64.3
-      priviledged: true
+      privileged: true
 
     ## Server VPN
     # Serveur VPN de l'entreprise
@@ -144,9 +144,27 @@ services:
       networks:
         pro:
           ipv4_adress: 120.0.64.4
-      priviledged: true
+      privileged: true
         - DNS_pro
         - routeur_pro
+
+    ## Server FTP
+    # Serveur FTP de l'entreprise
+    FTP_pro:
+      container_name: FTP_pro
+      build:
+        context: .pro/FTP_pro
+        dockerfile: Dockerfile
+      restart: always
+      hostname: FTP_pro
+      dns:
+        - 120.0.64.1
+      networks:
+        pro:
+          ipv4_adress: 120.0.64.5
+      privileged: true
+      # depends_on: ???
+      #  - DNS_pro
     
     ## Box 1
     # Box 1 de l'entreprise
@@ -165,7 +183,7 @@ services:
           ipv4_adress: 120.0.64.11
         primaire:
           ipv4_adress: 192.168.2.11
-      priviledged: true
+      privileged: true
 
     ## Box 2
       # Box 2 de l'entreprise
@@ -184,7 +202,7 @@ services:
           ipv4_adress: 120.0.64.12
         secondaire:
           ipv4_adress: 192.168.3.12
-      priviledged: true
+      privileged: true
 
 ########################################################################
 
