@@ -60,183 +60,186 @@ services:
     restart: always # si crash
     hostname: routeur_pro
     dns:
+    - 120.0.64.1
+  networks:
+    pro: #adress -> AS_Pro
+      ipv4_address:120.0.64.111
+    backbone: #adress -> backbone
+      ipv4_address:120.0.0.111
+    privileged: true # donne des accès élevé au système
+    depends_on:
+      # depend de sa connection avec l'extèrieur
+      # si FAI DOWN -> ne s'active pas
+      - routeur_FAI
+
+
+  ## Server DNS professionnel
+  # Table correspondance de cet AS privé uniquement ?
+  DNS_pro:
+    container_name: DNS_pro
+    build:
+      context: .pro/DNS_pro
+      dockerfile: Dockerfile
+    restart: always
+    hostname: DNS_pro
+    #dns:
+    #  - 120.0.64.1
+    networks:
+      pro:
+        ipv4_address: 120.0.64.1
+    privileged: true
+    depends_on:
+      - routeur_pro
+      # - box_pro1 ??
+      # - box_pro2 ??
+
+
+  ## Server Web
+  # Serveur web de l'entreprise
+  # accessible depuis l'extérieur
+  web_pro:
+    container_name: web_pro
+    build:
+      context: .pro/web_pro
+      dockerfile: Dockerfile
+    restart: always
+    hostname: web_pro
+    dns:
       - 120.0.64.1
     networks:
-      pro: #adress -> AS_Pro
-        ipv4_adress:120.0.64.111
-      backbone: #adress -> backbone
-        ipv4_address:120.0.0.111
-      privileged: true # donne des accès élevé au système
-      depends_on:
-        # depend de sa connection avec l'extèrieur
-        # si FAI DOWN -> ne s'active pas
-        - routeur_FAI
-
-
-    ## Server DNS professionnel
-    # Table correspondance de cet AS privé uniquement ?
-    DNS_pro:
-      container_name: DNS_pro
-      build:
-        context: .pro/DNS_pro
-        dockerfile: Dockerfile
-      restart: always
-      hostname: DNS_pro
-      #dns:
-      #  - 120.0.64.1
-      networks:
-        pro:
-          ipv4_adress: 120.0.64.1
-      privileged: true
-      depends_on:
-        - routeur_pro
-        # - box_pro1 ??
-        # - box_pro2 ??
-
-    ## Server Web
-    # Serveur web de l'entreprise
-    # accessible depuis l'extérieur
-    web_pro:
-      container_name: web_pro
-      build:
-        context: .pro/web_pro
-        dockerfile: Dockerfile
-      restart: always
-      hostname: web_pro
-      dns:
-        - 120.0.64.1
-      networks:
-        pro:
-          ipv4_adress: 120.0.64.2
-      privileged: true
-      depends_on:
-        - DNS_pro
-      
-    ## Server VOIP
-    # Serveur VOIP de l'entreprise
-    # accessible depuis l'extérieur
-    voip_pro:
-      container_name: voip_pro
-      build:
-        context: .pro/voip_pro
-        dockerfile: Dockerfile
-      restart: always
-      hostname: voip_pro
-      dns:
-        - 120.0.64.1
-      networks:
-        pro:
-          ipv4_adress: 120.0.64.3
-      privileged: true
-
-    ## Server VPN
-    # Serveur VPN de l'entreprise
-    # A IMPLENTER SI POSSIBLE
-    vpn_pro:
-      container_name: vpn_pro
-      build:
-        context: .pro/vpn_pro
-        dockerfile: Dockerfile
-      restart: always
-      hostname: vpn_pro
-      dns:
-        - 120.0.64.1
-      networks:
-        pro:
-          ipv4_adress: 120.0.64.4
-      privileged: true
-        - DNS_pro
-        - routeur_pro
-
-    ## Server FTP
-    # Serveur FTP de l'entreprise
-    FTP_pro:
-      container_name: FTP_pro
-      build:
-        context: .pro/FTP_pro
-        dockerfile: Dockerfile
-      restart: always
-      hostname: FTP_pro
-      dns:
-        - 120.0.64.1
-      networks:
-        pro:
-          ipv4_adress: 120.0.64.5
-      privileged: true
-      # depends_on: ???
-      #  - DNS_pro
+      pro:
+        ipv4_address: 120.0.64.2
+    privileged: true
+    depends_on:
+      - DNS_pro
     
-    ## Box 1
-    # Box 1 de l'entreprise
-    # site de l'entreprise primaire
-    box_pro1:
-      container_name: box_pro1
-      build:
-        context: .pro/box_pro1
-        dockerfile: Dockerfile
-      restart: always
-      hostname: box_pro1
-      dns:
-        - 120.0.64.1
-      networks:
-        pro:
-          ipv4_adress: 120.0.64.11
-        primaire:
-          ipv4_adress: 192.168.2.11
-      privileged: true
 
-    ## Box 2
-      # Box 2 de l'entreprise
-      # site de l'entreprise secondaire
-    box_pro2:
-      container_name: box_pro2
-      build:
-        context: .pro/box_pro2
-        dockerfile: Dockerfile
-      restart: always
-      hostname: box_pro2
-      dns:
-        - 120.0.64.1
-      networks:
-        pro:
-          ipv4_adress: 120.0.64.12
-        secondaire:
-          ipv4_adress: 192.168.3.12
-      privileged: true
-
-########################################################################
-
-# AS PARTICULIER
-  ## A FAIRE !!
+  ## Server VOIP
+  # Serveur VOIP de l'entreprise
+  # accessible depuis l'extérieur
+  voip_pro:
+    container_name: voip_pro
+    build:
+      context: .pro/voip_pro
+      dockerfile: Dockerfile
+    restart: always
+    hostname: voip_pro
+    dns:
+      - 120.0.64.1
+    networks:
+      pro:
+        ipv4_address: 120.0.64.3
+    privileged: true
 
 
-########################################################################
-########################################################################
- 
-networks:
-# Définition des différents réseaux
+  ## Server VPN
+  # Serveur VPN de l'entreprise
+  # A IMPLENTER SI POSSIBLE
+  vpn_pro:
+    container_name: vpn_pro
+    build:
+      context: .pro/vpn_pro
+      dockerfile: Dockerfile
+    restart: always
+    hostname: vpn_pro
+    dns:
+      - 120.0.64.1
+    networks:
+      pro:
+        ipv4_address: 120.0.64.4
+    privileged: true
+    depends_on:
+      - DNS_pro
+      - routeur_pro
 
+
+  ## Server FTP
+  # Serveur FTP de l'entreprise
+  FTP_pro:
+    container_name: FTP_pro
+    build:
+      context: .pro/FTP_pro
+      dockerfile: Dockerfile
+    restart: always
+    hostname: FTP_pro
+    dns:
+      - 120.0.64.1
+    networks:
+      pro:
+        ipv4_address: 120.0.64.5
+    privileged: true
+    # depends_on: ???
+    #  - DNS_pro
+  
+
+  ## Box 1
+  # Box 1 de l'entreprise
+  # site de l'entreprise primaire
+  box_pro1:
+    container_name: box_pro1
+    build:
+      context: .pro/box_pro1
+      dockerfile: Dockerfile
+    restart: always
+    hostname: box_pro1
+    dns:
+      - 120.0.64.1
+    networks:
+      pro:
+        ipv4_address: 120.0.64.11
+      primaire:
+        ipv4_address: 192.168.2.11
+    privileged: true
+
+
+  ## Box 2
+    # Box 2 de l'entreprise
+    # site de l'entreprise secondaire
+  box_pro2:
+    container_name: box_pro2
+    build:
+      context: .pro/box_pro2
+      dockerfile: Dockerfile
+    restart: always
+    hostname: box_pro2
+    dns:
+      - 120.0.64.1
+    networks:
+      pro:
+        ipv4_address: 120.0.64.12
+      secondaire:
+        ipv4_address: 192.168.3.12
+    privileged: true
+
+#######################################################################
+#AS PARTICULIER
+## A FAIRE !!
+#######################################################################
+#######################################################################
+
+networks: # Définition des différents réseaux
+  
   backbone:
     driver: bridge  # communication brigde entre les différents containers
     ipam:
       driver: default
       config:
         - subnet: 120.0.0.0/20 # à changer suivant la conf de la classe
-
+ 
   pro:
     driver: bridge
     ipam:
       driver: default
       config:
         - subnet: 120.0.64.0/20
-
+ 
   primaire:
     driver: bridge
     ipam:
       driver: default
       config:
-        - subnet: 192.168.2.0/24
-      
+        - subnet: 192.168.2.0/24      
+  
   secondaire:
     driver: bridge
     ipam:
