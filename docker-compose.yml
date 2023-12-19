@@ -12,40 +12,40 @@ services:
    # central dans notre architecture 
    # lien entre tous les AS
    # possède un DNS propre pour savoir sur quel AS router  
-  routeur_FAI:
-    container_name: routeur_FAI
-    build:
-      context: .backbone/routeur_FAI
-      dockerfile: Dockerfile
-    restart: always
-    hostname: routeur_FAI
-    dns:
-    # résolution nom de domaine -> IP
-    - 120.0.0.2
-    networks:
-      backbone:
-        ipv4_address: 120.0.0.1
-    privileged: true
+  # routeur_FAI:
+  #   container_name: routeur_FAI
+  #   build:
+  #     context: .backbone/routeur_FAI
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   hostname: routeur_FAI
+  #   dns:
+  #   # résolution nom de domaine -> IP
+  #   - 120.0.0.2
+  #   networks:
+  #     backbone:
+  #       ipv4_address: 120.0.0.1
+  #   privileged: true
 
-  ## Server DNS Fournisseur Accès Internet
-    # Table correspondance de tous les AS
-    # DNS de tous les AS
-  DNS_FAI:
-    container_name: DNS_FAI
-    build:
-      context: .backbone/DNS_FAI
-      dockerfile: Dockerfile
-    restart: always
-    hostname: DNS_FAI
-    dns:
-      - 120.0.0.2
-    networks:
-      backbone:
-        ipv4_address: 120.0.0.2 
-    privileged: true
-    depends_on:
-      - routeur_FAI
-    
+  # ## Server DNS Fournisseur Accès Internet
+  #   # Table correspondance de tous les AS
+  #   # DNS de tous les AS
+  # DNS_FAI:
+  #   container_name: DNS_FAI
+  #   build:
+  #     context: .backbone/DNS_FAI
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   hostname: DNS_FAI
+  #   dns:
+  #     - 120.0.0.2
+  #   networks:
+  #     backbone:
+  #       ipv4_address: 120.0.0.2
+  #   privileged: true
+  #   depends_on:
+  #     - routeur_FAI
+
 ########################################################################
 
 # AS PRO
@@ -112,7 +112,7 @@ services:
     privileged: true
     depends_on:
       - DNS_pro
-    
+
 
   ## Server VOIP
   # Serveur VOIP de l'entreprise
@@ -170,7 +170,7 @@ services:
     privileged: true
     # depends_on: ???
     #  - DNS_pro
-  
+
 
   ## Box 1
   # Box 1 de l'entreprise
@@ -218,34 +218,31 @@ services:
 #######################################################################
 
 networks: # Définition des différents réseaux
-  
+
   backbone:
     driver: bridge  # communication brigde entre les différents containers
     ipam:
       driver: default
       config:
         - subnet: 120.0.0.0/20 # à changer suivant la conf de la classe
- 
+
   pro:
     driver: bridge
     ipam:
       driver: default
       config:
         - subnet: 120.0.64.0/20
- 
+
   primaire:
     driver: bridge
     ipam:
       driver: default
       config:
-        - subnet: 192.168.2.0/24      
-  
+        - subnet: 192.168.2.0/24
+
   secondaire:
     driver: bridge
     ipam:
       driver: default
       config:
         - subnet: 192.168.3.0/24
-  
-
-      
