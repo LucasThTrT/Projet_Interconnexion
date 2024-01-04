@@ -1,0 +1,13 @@
+zone "domaine1.fr" {
+    type master;
+    file "/etc/bind/zones/domaine1.fr.zone";
+    allow-query { 123.123.123.0/24; }; // A CHANGER
+// Autorise que 123.123.123.0/24 pour domaine2.com
+};
+
+zone "domaine2.com" {
+    type master;
+    file "/etc/bind/zones/domaine2.com.zone";
+    allow-query {any; }; 
+// Autorise tout
+};

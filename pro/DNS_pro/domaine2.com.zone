@@ -1,0 +1,11 @@
+$TTL    604800
+@       IN      SOA     ns.domaine2.com. . (
+                              1         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      ns.domaine2.com.
+ns      IN      A       120.0.10.10     ; A CHANGER !!
+www     CNAME           ns.domaine2.com.
