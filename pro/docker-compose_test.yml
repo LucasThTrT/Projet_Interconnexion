@@ -10,7 +10,7 @@ services:
     restart: always
     hostname: voip
     networks:
-      - pro: 
+      pro: 
         ipv4_address: 120.0.64.1
     privileged: true
 
@@ -23,7 +23,7 @@ services:
     restart: always
     hostname: ordi_personnel_pro
     networks:
-      - pro:
+      pro:
         ipv4_address: 120.0.64.2
     privileged: true
 
