@@ -1,10 +1,9 @@
-# Création d'un appareil simple avec interface réseau
+# Utilisation de l'image Ubuntu
 FROM ubuntu
 
-# Installation des paquets nécessaires pour visualiser les interfaces réseaux
-RUN apt-get update && apt-get install -y \
-     nano \             
-     iputils-ping \    
-     net-tools \ 
-     iproute2 \        
-     iptables 
+# Mise à jour et installation des paquets nécessaires
+RUN apt-get update && \
+    apt-get install -y iputils-ping net-tools iproute2 iptables
+
+# Commande de test : rester actif
+CMD tail -f /dev/null

@@ -16,11 +16,11 @@
 Construire l'image à partir du Dockerfile
 >> docker build -t nom_de_votre_image .
 
-Démarrer le container
->> docker build -t nom_de_votre_image .
-
 Accéder au bash
->> docker exec -it nom_de_votre_conteneur bash
+>> docker run -it -P nom_image bash
+
+Démarrer le container sans le bash
+>> docker build -t nom_de_votre_image .
 
 Arrêter le container
 >> docker stop nom_de_votre_conteneur

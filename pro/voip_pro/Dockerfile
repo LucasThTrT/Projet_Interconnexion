@@ -12,3 +12,6 @@ RUN apk update && \
 COPY ./extensions.conf /etc/asterisk/
 COPY ./users.conf /etc/asterisk/
 COPY ./asterisk.conf /etc/asterisk/
+
+# Commande de test : rester actif
+#CMD tail -f /dev/null
