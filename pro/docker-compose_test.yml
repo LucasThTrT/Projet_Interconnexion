@@ -1,0 +1,38 @@
+version: "3.7"
+
+services:
+
+  voip:
+    container_name: voip
+    build:
+      context: pro/voip
+      dockerfile: Dockerfile
+    restart: always
+    hostname: voip
+    networks:
+      - pro: 
+        ipv4_address: 120.0.64.1
+    privileged: true
+
+
+  ordi_personnel_pro:
+    container_name: ordi_personnel_pro
+    build:
+      context: pro/ordi_personnel_pro
+      dockerfile: Dockerfile
+    restart: always
+    hostname: ordi_personnel_pro
+    networks:
+      - pro:
+        ipv4_address: 120.0.64.2
+    privileged: true
+
+
+networks:
+
+  pro:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 120.0.64.0/20
