@@ -2,10 +2,12 @@
 
 # 2A SN - Réseau
 
-## Commande pour lancer docker compose (toutes les images)
+## Commande pour lancer docker compose (toutes les images) (compose de la racine)
 >> docker-compose up 
 #(-d) pour le mode détaché éxécution arrière plan
 
+## Pour docker-compose sur une partie du projet
+>> docker-compose -f autre-compose.yml up
 
 ## Commmande pour voir tous les containers actifs
 >> docker ps 
