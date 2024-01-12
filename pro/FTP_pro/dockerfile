@@ -1,18 +1,23 @@
-FROM kathara/quagga
+# Utiliser l'image de base Ubuntu
+FROM ubuntu:latest
 
-# Installer bind9 et quagga
-RUN apt-get update && apt-get -y install proftpd
-RUN apt-get update
-RUN apt-get -y install iptables apt-utils iproute2 net-tools systemd telnet nano iputils-ping tcpdump inetutils-traceroute curl
-RUN apt-get -f install
+# Mise à jour des paquets et installation de vsftpd
+RUN apt-get update && \
+    apt-get install -y vsftpd
 
-RUN apt-get install -y iproute2
-RUN apt install net-tools
+# Copier le fichier de configuration vsftpd
+COPY vsftpd.conf /etc/vsftpd.conf
 
+# Créer un répertoire pour le FTP et un utilisateur
+RUN mkdir -p /ftp && \
+    useradd -d /ftp -s /usr/sbin/nologin ftpuser && \
+    chown ftpuser:ftpuser /ftp
 
-RUN service proftpd start
-COPY Serveur_FTP.sh  /home/Serveur_FTP.sh
+# Définir le mot de passe pour l'utilisateur ftpuser
+RUN echo 'ftpuser:123456789' | chpasswd
 
-RUN ["chmod", "+x", "/home/Serveur_FTP.sh"]
+# Exposer le port FTP standard et la plage pour le mode passif
+EXPOSE 21 21100-21110
 
-ENTRYPOINT /home/Serveur_FTP.sh ; /bin/bash
+# Lancer le serveur FTP avec un message de connexion
+CMD echo "Serveur FTP lancé, connectez-vous avec votre client FTP." && vsftpd
