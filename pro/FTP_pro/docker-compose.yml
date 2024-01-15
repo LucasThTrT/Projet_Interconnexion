@@ -1,0 +1,13 @@
+version: '2.1'
+services:
+  ftp:
+    image: delfer/alpine-ftp-server
+    network_mode: host
+#    ports:
+#      - 21:21
+#      - 21000-21010:21000-21010
+    environment:
+      - USERS=yassine|1234|/home/yassine|10000 utilisateur1|1234|/home/utilisateur1|10001
+    volumes:
+      - ./yassine:/home/yassine
+      - ./utilisateur1:/home/utilisateur1
